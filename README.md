@@ -16,7 +16,7 @@
 |[004](./004.sticky-chapter-node-title/)|自动组合匹配章节标题|Python|
 |[005](./005.batch-copy-files/)|将某一个文件复制多份，并重命名|Python|
 |[006](./006.batch-download-wkzj-videos/)|批量下载微课宝视频|JavaScript|
-|[007](./007.count-audio-duration/)|统计音频文件时长|Python|
+|[007](./007.count-audio-duration/)|统计音频文件总时长|Python|
 
 ## Python 实现的小工具使用方法
 
