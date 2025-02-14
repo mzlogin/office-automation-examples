@@ -30,11 +30,12 @@
 
     ```bash
     cd 001.merge-multi-excel-to-one
-    pip install -r requirements.txt
+    python3 -m venv .venv
+    ./.venv/bin/pip3 install -r requirements.txt
     ```
 
 3. 运行实例脚本，以 001 实例为例：
 
     ```bash
-    python3 main.py
+    ./.venv/bin/python3 main.py
     ```
