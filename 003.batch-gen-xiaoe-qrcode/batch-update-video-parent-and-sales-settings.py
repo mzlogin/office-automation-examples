@@ -1,18 +1,62 @@
 import requests
 
-# 需要先填充 cookie、resourceIds、parentId、parentType 再运行
+# 本脚本的应用场景是在「视频」列表里，通过一定的条件搜索出一系列的视频，然后将这些视频按照一定的规则排序后，依次更新这些视频的所属课程和售卖设置
+
+# 需要先填充 cookie、resourceIds、parentId、parentType、fetchSortedResourceIds 函数里的 data 搜索条件再运行
 
 cookie = """"""
-
-# resourceIds，过滤 https://admin.xiaoe-tech.com/xe.course.b_admin_r.course.base.list/1.0.0 请求所得
-resourceIds = [
-]
-
-# 倒序，因为视频是按照倒序的顺序添加的
-resourceIds.reverse()
-
 parentId = ''
 parentType = 50
+
+def fetchSortedResourceIds():
+    searchVideoUrl = 'https://admin.xiaoe-tech.com/xe.course.b_admin_r.course.base.list/1.0.0'
+    headers = {
+        'Cookie': cookie,
+        'Content-Type': 'application/x-www-form-urlencoded'
+    }
+
+    resources = []
+    page = 1
+    while True:
+        data = [
+            ('search_content', ), # fill param
+            ('resource_type', 3),
+            ('sale_status', -1),
+            ('created_source', 1),
+            ('auth_type', -1),
+            ('page_index', page),
+            ('page_size', 50),
+            ('tags[0]', ) # fill param
+        ]
+        response = requests.post(searchVideoUrl, headers = headers, data = data)
+        # print(response.json())
+        if response.json()['code'] != 0:
+            raise Exception('fetchSortedResourceIds 失败')
+        data = response.json()['data']
+        resources += data['list']
+        total = data['total']
+        totalPage = total / 50 + 1
+        if page >= totalPage:
+            break
+        page += 1
+    print('resources count: ' + str(len(resources)))
+    # 将 resources 排序，根据 title 排序，title 的格式示例：
+    # 初二秋季第8讲例3、初二春季第18讲例14
+    # 含有 '秋' 的排在含有 '春' 的前面，title 里都可以解析出两个数，这两个数可能是一位数也可能是两位数，按这两个数的大小排序
+    resources.sort(key = lambda x: (x['title'].find('春'), int(x['title'].split('第')[1].split('讲')[0]), int(x['title'].split('例')[1])))
+
+    # resourceTitles = [resource['title'] for resource in resources]
+    # for title in resourceTitles:
+    #     print(title)
+
+    return [resource['resource_id'] for resource in resources]
+
+# resourceIds，过滤 https://admin.xiaoe-tech.com/xe.course.b_admin_r.course.base.list/1.0.0 请求所得
+# 倒序，因为视频是按照倒序的顺序添加的
+# resourceIds = [ ]
+# resourceIds.reverse()
+
+resourceIds = fetchSortedResourceIds()
 
 def updateVideoParentAndSalesSettings(resourceId, parentId, parentType):
     print('Updating video: ' + resourceId)
