@@ -21,6 +21,7 @@ def genQrcode(content, fileName):
 # 1. 获取课程章节列表
 chapterDetailUrl = 'https://admin.xiaoe-tech.com/xe.course.b_admin_r.camp_pro.chapter.list.get/1.0.0'
 chapterDetails = []
+chapters = []
 page = 1
 while True:
     payload = {
@@ -38,12 +39,44 @@ while True:
     if response['code'] != 0:
         raise Exception('获取课程章节列表失败')
     data = response['data']
-    chapterDetails += data['list']
+    # chapterDetails += data['list']
+    for item in data['list']:
+        if item['chapter_type'] == 1:
+            chapters.append(item)
+        elif item['chapter_type'] == 2:
+            chapterDetails.append(item)
     total = data['total']
     totalPage = total / 50 + 1
     if page >= totalPage:
         break
     page += 1
+
+# 1.1 提取章节中的小节
+for chapter in chapters:
+    page = 1
+    while True:
+        payload = {
+            "course_id": courseId,
+            "sub_course_id":"",
+            "p_id": chapter['chapter_id'],
+            "page":page,
+            "page_size":50,
+            "search_word":""
+        }
+        headers = {
+            'Cookie': cookie
+        }
+        response = requests.post(chapterDetailUrl, headers = headers, json = payload).json()
+        if response['code'] != 0:
+            raise Exception('获取课程章节列表失败')
+        data = response['data']
+        chapterDetails += data['list']
+        total = data['total']
+        totalPage = total / 50 + 1
+        if page >= totalPage:
+            break
+        page += 1
+
 print('chapterDetails count: ' + str(len(chapterDetails)))
 
 # 2. 依次生成各小节的二维码
