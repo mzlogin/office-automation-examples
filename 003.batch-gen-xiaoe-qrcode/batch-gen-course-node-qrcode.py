@@ -1,11 +1,17 @@
 import requests
 import qrcode
+from tkinter import simpledialog
 
 # 批量生成课程小节的二维码
 
 # 需要先填充以下信息
-cookie = """"""
-courseId = ''
+cookie = simpledialog.askstring('Cookie', '请输入 Cookie')
+if cookie is None or len(cookie) == 0 :
+    raise Exception('Cookie 不能为空')
+
+courseId = simpledialog.askstring('课程 ID', '请输入课程 ID')
+if courseId is None or len(courseId) == 0:
+    raise Exception('课程 ID 不能为空')
 
 def genQrcode(content, fileName):
     for i,j in ("/／","\\＼","?？","|︱","\"＂","*＊","<＜",">＞"):

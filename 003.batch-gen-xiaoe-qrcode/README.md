@@ -1,23 +1,35 @@
 # 003. 批量生成小鹅通课程分享二维码
 
-## 功能描述
+批量生成小鹅通课程及里面的小节的分享二维码。
 
-1. 将 批量下载小鹅通二维码.js 添加到浏览器开发者工具的 源代码 - 片段 里面，通过它生成 data.txt 文件所需内容，格式如下：
+## 环境配置
 
-    ```
-    链接名称1,课程链接1
-    链接名称2,课程链接2
-    链接名称3,课程链接3
-    ```
+1. 安装 Python 3，注意安装时勾选 `Add Python to PATH` 选项；
 
-    如：
+2. 安装依赖库：
 
-    ```
-    章节1,https://lfvbx.xetslk.com/s/xxx
-    章节2,https://lfvbx.xetslk.com/s/yyy
-    章节3,https://lfvbx.xetslk.com/s/zzz
+    ```sh
+    pip install -r requirements.txt
     ```
 
-2. 将以上内容保存为 data.txt 文件；
+    Windows 下可直接双击 `安装依赖库.CMD`。
 
-3. 通过 [002.batch-gen-qrcode](../002.batch-gen-qrcode/) 小工具，批量生成二维码。
+## 使用方法
+
+1. 在浏览器打开需要生成二维码的小鹅通课程，按 F12 打开开发者工具，切到 网络（or Network）选项卡；
+
+2. 刷新页面；
+
+3. 执行脚本
+
+    ```sh
+    python batch-gen-course-node-qrcode.py
+    ```
+
+    Windows 下可直接双击执行 `批量生成课程二维码.CMD`。
+
+4. 此时会弹出一个窗口，提示输入 Cookie，在浏览器开发者工具中点击一个请求，切到 Headers 选项卡，找到 Cookie，复制整个 Cookie 字符串，粘贴到弹出的窗口中，点 OK；
+
+5. 此时提示输入课程 ID，从浏览器地址栏复制最后一段，如 `course_xxxx`，粘贴到弹出的窗口中，点 OK；
+
+6. 等待执行完成。
