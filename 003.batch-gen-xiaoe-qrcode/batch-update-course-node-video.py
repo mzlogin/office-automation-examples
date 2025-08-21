@@ -121,7 +121,7 @@ for chapterDetail in chapterDetails:
     elif total >= 1:
         # 如果找到一个或多个视频，根据标题进行完全匹配，只有有且仅有一个完全匹配，认为有效
         # 否则，输出并跳过
-        resources = [resource for resource in resources if resource['title'] == originTitle + '.mp4']
+        resources = [resource for resource in resources if (resource['title'] == originTitle + '.mp4' or resource['title'] == originTitle + '.MP4')]
         if len(resources) == 0:
             print('%s: 找到多个视频，但无法精确匹配' % originTitle)
             continue
