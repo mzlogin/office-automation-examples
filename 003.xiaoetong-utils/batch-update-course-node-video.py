@@ -82,6 +82,7 @@ for chapterDetail in chapterDetails:
     # 2.1 获取小节标题
     originTitle = chapterDetail['chapter_title']
     chapterId = chapterDetail['chapter_id']
+    videoTitle = originTitle.replace('/', ':') # 名称含 / 的视频文件，上传后会被自动替换成 :
 
     # 2.2 查询小节视频详情，如果小节的视频文件标题包含小节标题，说明已经关联了视频，跳过
     videoFileUrl = 'https://admin.xiaoe-tech.com/xe.course.b_admin_r.video.info.get/1.0.0?resource_id=' + chapterId
@@ -91,7 +92,7 @@ for chapterDetail in chapterDetails:
         continue
 
     originVideoFileName = videoFileInfo['data']['file_name']
-    if originVideoFileName.find(originTitle) != -1:
+    if originVideoFileName.find(videoTitle) != -1:
         print('%s: 已经关联视频，跳过' % originTitle)
         continue
 
@@ -105,7 +106,7 @@ for chapterDetail in chapterDetails:
         ('type', 3),
         ('page', 1),
         ('page_size', 10),
-        ('keyword', originTitle),
+        ('keyword', videoTitle),
         ('query_type', 4),
         ('order_by', 5),
         ('order_by_type', 1)
@@ -122,7 +123,7 @@ for chapterDetail in chapterDetails:
     elif total >= 1:
         # 如果找到一个或多个视频，根据标题进行完全匹配，只有有且仅有一个完全匹配，认为有效
         # 否则，输出并跳过
-        resources = [resource for resource in resources if os.path.splitext(resource['title'])[0] == originTitle]
+        resources = [resource for resource in resources if os.path.splitext(resource['title'])[0] == videoTitle]
         if len(resources) == 0:
             print('%s: 找到多个视频，但无法精确匹配' % originTitle)
             continue
@@ -152,7 +153,7 @@ for chapterDetail in chapterDetails:
             "descrb": "",
             "img_url": imgUrl,
             "learn_page_cover": imgUrl,
-            "title": originTitle
+            "title": videoTitle
         },
         "resource_id": chapterId,
         "review_parent_ids": [

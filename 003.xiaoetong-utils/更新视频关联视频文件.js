@@ -18,6 +18,9 @@ async function updateVideoRelateFile() {
     // 获取视频标题
     var videoTitle = document.querySelector('.course-title').textContent.trim();
 
+    // 名称含 / 的视频文件，上传后会被自动替换成 :
+    videoTitle = videoTitle.replace(/\//g, ':');
+
     // 点击选择文件按钮
     document.querySelector('.video-selector__right .ss-button').click()
 
