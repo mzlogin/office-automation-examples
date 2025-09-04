@@ -85,8 +85,8 @@ def main(startNodeIndex, endNodeIndex):
         startNodeIndex = 0
     if startNodeIndex >= 1:
         startNodeIndex -= 1
-    if endNodeIndex is None or endNodeIndex > len(chapterDetails) - 1:
-        endNodeIndex = len(chapterDetails) - 1
+    if endNodeIndex is None or endNodeIndex > len(chapterDetails):
+        endNodeIndex = len(chapterDetails)
 
     for nodeIndex in range(startNodeIndex, endNodeIndex):
         chapterDetail = chapterDetails[nodeIndex]
